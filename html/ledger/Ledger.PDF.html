@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="utf-8"><title>Ledger.PDF</title><link rel="stylesheet" href="Agda.css"></head><body><pre class="Agda"><a id="1" class="Background">\documentclass[11pt,a4paper,dvipsnames,twosided]{article}
+\usepackage{unicode-math}
+\setsansfont{XITSMath-Regular.otf}
+
+\usepackage{newunicodechar}
+\newunicodechar{ᵇ}{\ensuremath{^b}}
+\newunicodechar{ᶜ}{\ensuremath{^c}}
+\newunicodechar{ᵈ}{\ensuremath{^d}}
+\newunicodechar{ᵉ}{\ensuremath{^e}}
+\newunicodechar{ᵐ}{\ensuremath{^m}}
+\newunicodechar{ᵖ}{\ensuremath{^p}}
+\newunicodechar{ᵘ}{\ensuremath{^u}}
+\newunicodechar{₁}{\ensuremath{_1}}
+\newunicodechar{₂}{\ensuremath{_2}}
+\newunicodechar{₃}{\ensuremath{_3}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{≤}{\ensuremath{\leq}}
+\newunicodechar{≢}{\ensuremath{\nequiv}}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{float}
+\floatstyle{boxed}
+\restylefloat{figure}
+
+\usepackage{iohk}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage[links]{agda}
+
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\TxBody}{\type{TxBody}}
+\newcommand{\TxWitness}{\type{TxWitness}}
+\newcommand{\Tx}{\type{Tx}}
+\newcommand{\Ix}{\type{Ix}}
+\newcommand{\TxId}{\type{TxId}}
+\newcommand{\Addr}{\type{Addr}}
+\newcommand{\UTxO}{\type{UTxO}}
+\newcommand{\Coin}{\type{Coin}}
+\newcommand{\TxIn}{\type{TxIn}}
+\newcommand{\TxOut}{\type{TxOut}}
+\newcommand{\UTxOEnv}{\type{UTxOEnv}}
+\newcommand{\UTxOState}{\ensuremath{\type{UTxOState}}}
+
+%%
+%% Functions
+%%
+\newcommand{\txins}[1]{\fun{txins}~ \var{#1}}
+\newcommand{\txouts}[1]{\fun{txouts}~ \var{#1}}
+\newcommand{\txid}[1]{\fun{txid}~ \var{#1}}
+\newcommand{\outs}[1]{\fun{outs}~ \var{#1}}
+\newcommand{\balance}[1]{\fun{balance}~ \var{#1}}
+\newcommand{\txfee}[1]{\fun{txfee}~ \var{#1}}
+
+\newcommand{\wcard}[0]{\rule[-.5mm]{2mm}{.2mm}}
+\newcommand{\leteq}{\ensuremath{\mathrel{\mathop:}=}}
+
+\newtheorem{property}{Property}[section]
+
+
+\begin{document}
+
+</a><a id="1729" class="Markup">\begin{code}[hide]</a>
+<a id="1748" class="Symbol">{-#</a> <a id="1752" class="Keyword">OPTIONS</a> <a id="1760" class="Pragma">--safe</a> <a id="1767" class="Symbol">#-}</a>
+
+<a id="1772" class="Keyword">open</a> <a id="1777" class="Keyword">import</a> <a id="1784" href="Ledger.Transaction.html" class="Module">Ledger.Transaction</a>
+
+<a id="1804" class="Keyword">module</a> <a id="1811" href="Ledger.PDF.html" class="Module">Ledger.PDF</a> <a id="1822" class="Symbol">(</a><a id="1823" href="Ledger.PDF.html#1823" class="Bound">txs</a> <a id="1827" class="Symbol">:</a> <a id="1829" href="Ledger.Transaction.html#516" class="Record">TransactionStructure</a><a id="1849" class="Symbol">)</a> <a id="1851" class="Keyword">where</a>
+
+<a id="1858" class="Keyword">open</a> <a id="1863" class="Keyword">import</a> <a id="1870" href="Ledger.Utxo.html" class="Module">Ledger.Utxo</a> <a id="1882" href="Ledger.PDF.html#1823" class="Bound">txs</a>
+<a id="1886" class="Keyword">open</a> <a id="1891" class="Keyword">import</a> <a id="1898" href="Ledger.Utxow.html" class="Module">Ledger.Utxow</a> <a id="1911" href="Ledger.PDF.html#1823" class="Bound">txs</a>
+<a id="1915" class="Keyword">open</a> <a id="1920" class="Keyword">import</a> <a id="1927" href="Ledger.Chain.html" class="Module">Ledger.Chain</a> <a id="1940" href="Ledger.PDF.html#1823" class="Bound">txs</a>
+
+<a id="1945" class="Keyword">open</a> <a id="1950" class="Keyword">import</a> <a id="1957" href="Ledger.Ledger.Properties.html" class="Module">Ledger.Ledger.Properties</a>
+<a id="1982" class="Markup">\end{code}</a><a id="1992" class="Background">
+
+\include{Ledger/Crypto}
+\include{Ledger/Address}
+\include{Ledger/Script}
+\include{Ledger/PParams}
+\include{Ledger/Transaction}
+\include{Ledger/Utxo}
+\include{Ledger/Utxow}
+\include{Ledger/PPUp}
+\include{Ledger/Ledger}
+\include{Ledger/NewPP}
+\include{Ledger/Chain}
+
+\section{Properties}
+\include{Ledger/Utxo/Properties}
+
+\end{document}
+</a></pre></body></html>

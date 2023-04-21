@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html><head><meta charset="utf-8"><title>Ledger.Ledger</title><link rel="stylesheet" href="Agda.css"></head><body><pre class="Agda"><a id="1" class="Background">\section{Ledger State Transition}
+
+</a><a id="36" class="Markup">\begin{code}[hide]</a>
+<a id="55" class="Symbol">{-#</a> <a id="59" class="Keyword">OPTIONS</a> <a id="67" class="Pragma">--safe</a> <a id="74" class="Symbol">#-}</a>
+
+<a id="79" class="Keyword">open</a> <a id="84" class="Keyword">import</a> <a id="91" href="Ledger.Transaction.html" class="Module">Ledger.Transaction</a>
+
+<a id="111" class="Keyword">module</a> <a id="118" href="Ledger.Ledger.html" class="Module">Ledger.Ledger</a> <a id="132" class="Symbol">(</a><a id="133" href="Ledger.Ledger.html#133" class="Bound">txs</a> <a id="137" class="Symbol">:</a> <a id="139" href="Ledger.Transaction.html#516" class="Record">TransactionStructure</a><a id="159" class="Symbol">)</a> <a id="161" class="Keyword">where</a>
+
+<a id="168" class="Keyword">open</a> <a id="173" class="Keyword">import</a> <a id="180" href="Ledger.Prelude.html" class="Module">Ledger.Prelude</a>
+
+<a id="196" class="Keyword">open</a> <a id="201" href="Ledger.Transaction.html#516" class="Module">TransactionStructure</a> <a id="222" href="Ledger.Ledger.html#133" class="Bound">txs</a>
+<a id="226" class="Keyword">open</a> <a id="231" class="Keyword">import</a> <a id="238" href="Ledger.PParams.html" class="Module">Ledger.PParams</a> <a id="253" href="Ledger.Epoch.html#593" class="Function">Epoch</a>
+
+<a id="260" class="Keyword">open</a> <a id="265" class="Keyword">import</a> <a id="272" href="Ledger.Utxo.html" class="Module">Ledger.Utxo</a> <a id="284" href="Ledger.Ledger.html#133" class="Bound">txs</a>
+<a id="288" class="Keyword">open</a> <a id="293" class="Keyword">import</a> <a id="300" href="Ledger.Utxow.html" class="Module">Ledger.Utxow</a> <a id="313" href="Ledger.Ledger.html#133" class="Bound">txs</a>
+<a id="317" class="Keyword">open</a> <a id="322" class="Keyword">import</a> <a id="329" href="Ledger.PPUp.html" class="Module">Ledger.PPUp</a> <a id="341" href="Ledger.Ledger.html#133" class="Bound">txs</a>
+
+<a id="346" class="Keyword">open</a> <a id="351" href="Ledger.Transaction.html#3718" class="Module">Tx</a>
+<a id="354" class="Keyword">open</a> <a id="359" href="Ledger.Transaction.html#3201" class="Module">TxBody</a>
+<a id="366" class="Markup">\end{code}</a><a id="376" class="Background">
+\begin{figure*}[h]
+</a><a id="396" class="Markup">\begin{code}</a>
+<a id="409" class="Comment">-- Only include accounting &amp; governance info for now</a>
+<a id="462" class="Keyword">record</a> <a id="LEnv"></a><a id="469" href="Ledger.Ledger.html#469" class="Record">LEnv</a> <a id="474" class="Symbol">:</a> <a id="476" href="Agda.Primitive.html#320" class="Primitive">Set</a> <a id="480" class="Keyword">where</a>
+  <a id="488" class="Keyword">constructor</a> <a id="⟦_,_,_⟧ˡᵉ"></a><a id="500" href="Ledger.Ledger.html#500" class="InductiveConstructor Operator">⟦_,_,_⟧ˡᵉ</a>
+  <a id="512" class="Keyword">field</a> <a id="LEnv.slot"></a><a id="518" href="Ledger.Ledger.html#518" class="Field">slot</a> <a id="523" class="Symbol">:</a> <a id="525" href="Ledger.Epoch.html#608" class="Function">Slot</a>
+        <a id="538" class="Comment">--txix : Ix</a>
+        <a id="LEnv.pparams"></a><a id="558" href="Ledger.Ledger.html#558" class="Field">pparams</a> <a id="566" class="Symbol">:</a> <a id="568" href="Ledger.PParams.html#211" class="Record">PParams</a>
+        <a id="584" class="Comment">--acnt : Acnt</a>
+        <a id="LEnv.genDelegs"></a><a id="606" href="Ledger.Ledger.html#606" class="Field">genDelegs</a> <a id="616" class="Symbol">:</a> <a id="618" href="Ledger.PPUp.html#745" class="Function">GenesisDelegation</a> <a id="636" class="Comment">-- part of DPState</a>
+
+<a id="656" class="Keyword">record</a> <a id="LState"></a><a id="663" href="Ledger.Ledger.html#663" class="Record">LState</a> <a id="670" class="Symbol">:</a> <a id="672" href="Agda.Primitive.html#320" class="Primitive">Set</a> <a id="676" class="Keyword">where</a>
+  <a id="684" class="Keyword">constructor</a> <a id="⟦_,_⟧ˡ"></a><a id="696" href="Ledger.Ledger.html#696" class="InductiveConstructor Operator">⟦_,_⟧ˡ</a>
+  <a id="705" class="Keyword">field</a> <a id="LState.utxoSt"></a><a id="711" href="Ledger.Ledger.html#711" class="Field">utxoSt</a> <a id="718" class="Symbol">:</a> <a id="720" href="Ledger.Utxo.html#3478" class="Record">UTxOState</a>
+        <a id="LState.ppup"></a><a id="738" href="Ledger.Ledger.html#738" class="Field">ppup</a>   <a id="745" class="Symbol">:</a> <a id="747" href="Ledger.PPUp.html#803" class="Record">PPUpdateState</a>
+        <a id="769" class="Comment">--dpstate : DPState</a>
+<a id="789" class="Markup">\end{code}</a><a id="799" class="Background">
+\caption{Types for the LEDGER transition system}
+\end{figure*}
+</a><a id="863" class="Markup">\begin{code}[hide]</a>
+<a id="882" class="Keyword">private</a> <a id="890" class="Keyword">variable</a>
+  <a id="901" href="Ledger.Ledger.html#901" class="Generalizable">Γ</a> <a id="903" class="Symbol">:</a> <a id="905" href="Ledger.Ledger.html#469" class="Record">LEnv</a>
+  <a id="912" href="Ledger.Ledger.html#912" class="Generalizable">s</a> <a id="914" href="Ledger.Ledger.html#914" class="Generalizable">s&#39;</a> <a id="917" href="Ledger.Ledger.html#917" class="Generalizable">s&#39;&#39;</a> <a id="921" class="Symbol">:</a> <a id="923" href="Ledger.Ledger.html#663" class="Record">LState</a>
+  <a id="932" href="Ledger.Ledger.html#932" class="Generalizable">utxoSt&#39;</a> <a id="940" class="Symbol">:</a> <a id="942" href="Ledger.Utxo.html#3478" class="Record">UTxOState</a>
+  <a id="954" href="Ledger.Ledger.html#954" class="Generalizable">ppup&#39;</a> <a id="960" class="Symbol">:</a> <a id="962" href="Ledger.PPUp.html#803" class="Record">PPUpdateState</a>
+  <a id="978" href="Ledger.Ledger.html#978" class="Generalizable">tx</a> <a id="981" class="Symbol">:</a> <a id="983" href="Ledger.Transaction.html#3718" class="Record">Tx</a>
+
+<a id="987" class="Keyword">data</a> <a id="_⊢_⇀⦇_,LEDGER⦈_"></a><a id="992" href="Ledger.Ledger.html#992" class="Datatype Operator">_⊢_⇀⦇_,LEDGER⦈_</a> <a id="1008" class="Symbol">:</a> <a id="1010" href="Ledger.Ledger.html#469" class="Record">LEnv</a> <a id="1015" class="Symbol">→</a> <a id="1017" href="Ledger.Ledger.html#663" class="Record">LState</a> <a id="1024" class="Symbol">→</a> <a id="1026" href="Ledger.Transaction.html#3718" class="Record">Tx</a> <a id="1029" class="Symbol">→</a> <a id="1031" href="Ledger.Ledger.html#663" class="Record">LState</a> <a id="1038" class="Symbol">→</a> <a id="1040" href="Agda.Primitive.html#320" class="Primitive">Set</a> <a id="1044" class="Keyword">where</a>
+<a id="1050" class="Markup">\end{code}</a><a id="1060" class="Background">
+\begin{figure*}[h]
+</a><a id="1080" class="Markup">\begin{code}</a>
+  <a id="_⊢_⇀⦇_,LEDGER⦈_.LEDGER"></a><a id="1095" href="Ledger.Ledger.html#1095" class="InductiveConstructor">LEDGER</a> <a id="1102" class="Symbol">:</a> <a id="1104" class="Keyword">let</a> <a id="1108" class="Keyword">open</a> <a id="1113" href="Ledger.Ledger.html#663" class="Module">LState</a> <a id="1120" href="Ledger.Ledger.html#912" class="Generalizable">s</a> <a id="1122" class="Keyword">in</a>
+    <a id="1129" class="Keyword">record</a> <a id="1136" class="Symbol">{</a> <a id="1138" href="Ledger.Ledger.html#1138" class="Module">LEnv</a> <a id="1143" href="Ledger.Ledger.html#901" class="Generalizable">Γ</a> <a id="1145" class="Symbol">}</a> <a id="1147" href="Ledger.Utxow.html#1012" class="Datatype Operator">⊢</a> <a id="1149" href="Ledger.Ledger.html#711" class="Function">utxoSt</a> <a id="1156" href="Ledger.Utxow.html#1012" class="Datatype Operator">⇀⦇</a> <a id="1159" href="Ledger.Ledger.html#978" class="Generalizable">tx</a> <a id="1162" href="Ledger.Utxow.html#1012" class="Datatype Operator">,UTXOW⦈</a> <a id="1170" href="Ledger.Ledger.html#932" class="Generalizable">utxoSt&#39;</a>
+    <a id="1182" class="Symbol">→</a> <a id="1184" class="Keyword">record</a> <a id="1191" class="Symbol">{</a> <a id="1193" href="Ledger.Ledger.html#1193" class="Module">LEnv</a> <a id="1198" href="Ledger.Ledger.html#901" class="Generalizable">Γ</a> <a id="1200" class="Symbol">}</a> <a id="1202" href="Ledger.PPUp.html#2318" class="Datatype Operator">⊢</a> <a id="1204" href="Ledger.Ledger.html#738" class="Function">ppup</a> <a id="1209" href="Ledger.PPUp.html#2318" class="Datatype Operator">⇀⦇</a> <a id="1212" href="Ledger.Transaction.html#3460" class="Field">txup</a> <a id="1217" class="Symbol">(</a><a id="1218" href="Ledger.Transaction.html#3743" class="Field">body</a> <a id="1223" href="Ledger.Ledger.html#978" class="Generalizable">tx</a><a id="1225" class="Symbol">)</a> <a id="1227" href="Ledger.PPUp.html#2318" class="Datatype Operator">,PPUP⦈</a> <a id="1234" href="Ledger.Ledger.html#954" class="Generalizable">ppup&#39;</a>
+    <a id="1244" class="Comment">-- DELEGS</a>
+    <a id="1258" href="Interface.ComputationalRelation.html#276" class="Function Operator">────────────────────────────────</a>
+    <a id="1295" href="Ledger.Ledger.html#901" class="Generalizable">Γ</a> <a id="1297" href="Ledger.Ledger.html#992" class="Datatype Operator">⊢</a> <a id="1299" href="Ledger.Ledger.html#912" class="Generalizable">s</a> <a id="1301" href="Ledger.Ledger.html#992" class="Datatype Operator">⇀⦇</a> <a id="1304" href="Ledger.Ledger.html#978" class="Generalizable">tx</a> <a id="1307" href="Ledger.Ledger.html#992" class="Datatype Operator">,LEDGER⦈</a> <a id="1316" href="Ledger.Ledger.html#696" class="InductiveConstructor Operator">⟦</a> <a id="1318" href="Ledger.Ledger.html#932" class="Generalizable">utxoSt&#39;</a> <a id="1326" href="Ledger.Ledger.html#696" class="InductiveConstructor Operator">,</a> <a id="1328" href="Ledger.Ledger.html#954" class="Generalizable">ppup&#39;</a> <a id="1334" href="Ledger.Ledger.html#696" class="InductiveConstructor Operator">⟧ˡ</a>
+<a id="1337" class="Markup">\end{code}</a><a id="1347" class="Background">
+\caption{LEDGER transition system}
+\end{figure*}
+</a><a id="1397" class="Markup">\begin{code}[hide]</a>
+<a id="1416" class="Keyword">data</a> <a id="_⊢_⇀⦇_,LEDGERS⦈_"></a><a id="1421" href="Ledger.Ledger.html#1421" class="Datatype Operator">_⊢_⇀⦇_,LEDGERS⦈_</a> <a id="1438" class="Symbol">:</a> <a id="1440" href="Ledger.Ledger.html#469" class="Record">LEnv</a> <a id="1445" class="Symbol">→</a> <a id="1447" href="Ledger.Ledger.html#663" class="Record">LState</a> <a id="1454" class="Symbol">→</a> <a id="1456" href="Agda.Builtin.List.html#130" class="Datatype">List</a> <a id="1461" href="Ledger.Transaction.html#3718" class="Record">Tx</a> <a id="1464" class="Symbol">→</a> <a id="1466" href="Ledger.Ledger.html#663" class="Record">LState</a> <a id="1473" class="Symbol">→</a> <a id="1475" href="Agda.Primitive.html#320" class="Primitive">Set</a> <a id="1479" class="Keyword">where</a>
+<a id="1485" class="Markup">\end{code}</a><a id="1495" class="Background">
+\begin{figure*}[h]
+</a><a id="1515" class="Markup">\begin{code}</a>
+  <a id="_⊢_⇀⦇_,LEDGERS⦈_.LEDGERS-base"></a><a id="1530" href="Ledger.Ledger.html#1530" class="InductiveConstructor">LEDGERS-base</a> <a id="1543" class="Symbol">:</a> <a id="1545" href="Ledger.Ledger.html#901" class="Generalizable">Γ</a> <a id="1547" href="Ledger.Ledger.html#1421" class="Datatype Operator">⊢</a> <a id="1549" href="Ledger.Ledger.html#912" class="Generalizable">s</a> <a id="1551" href="Ledger.Ledger.html#1421" class="Datatype Operator">⇀⦇</a> <a id="1554" href="Agda.Builtin.List.html#167" class="InductiveConstructor">[]</a> <a id="1557" href="Ledger.Ledger.html#1421" class="Datatype Operator">,LEDGERS⦈</a> <a id="1567" href="Ledger.Ledger.html#912" class="Generalizable">s</a>
+
+  <a id="_⊢_⇀⦇_,LEDGERS⦈_.LEDGERS-ind"></a><a id="1572" href="Ledger.Ledger.html#1572" class="InductiveConstructor">LEDGERS-ind</a> <a id="1584" class="Symbol">:</a> <a id="1586" class="Symbol">∀</a> <a id="1588" class="Symbol">{</a><a id="1589" href="Ledger.Ledger.html#1589" class="Bound">txs</a><a id="1592" class="Symbol">}</a>
+    <a id="1598" class="Symbol">→</a> <a id="1600" href="Ledger.Ledger.html#901" class="Generalizable">Γ</a> <a id="1602" href="Ledger.Ledger.html#992" class="Datatype Operator">⊢</a> <a id="1604" href="Ledger.Ledger.html#912" class="Generalizable">s</a> <a id="1606" href="Ledger.Ledger.html#992" class="Datatype Operator">⇀⦇</a> <a id="1609" href="Ledger.Ledger.html#978" class="Generalizable">tx</a> <a id="1612" href="Ledger.Ledger.html#992" class="Datatype Operator">,LEDGER⦈</a> <a id="1621" href="Ledger.Ledger.html#914" class="Generalizable">s&#39;</a>
+    <a id="1628" class="Symbol">→</a> <a id="1630" href="Ledger.Ledger.html#901" class="Generalizable">Γ</a> <a id="1632" href="Ledger.Ledger.html#1421" class="Datatype Operator">⊢</a> <a id="1634" href="Ledger.Ledger.html#914" class="Generalizable">s&#39;</a> <a id="1637" href="Ledger.Ledger.html#1421" class="Datatype Operator">⇀⦇</a> <a id="1640" href="Ledger.Ledger.html#1589" class="Bound">txs</a> <a id="1644" href="Ledger.Ledger.html#1421" class="Datatype Operator">,LEDGERS⦈</a> <a id="1654" href="Ledger.Ledger.html#917" class="Generalizable">s&#39;&#39;</a>
+    <a id="1662" href="Interface.ComputationalRelation.html#276" class="Function Operator">────────────────────────────────</a>
+    <a id="1699" href="Ledger.Ledger.html#901" class="Generalizable">Γ</a> <a id="1701" href="Ledger.Ledger.html#1421" class="Datatype Operator">⊢</a> <a id="1703" href="Ledger.Ledger.html#912" class="Generalizable">s</a> <a id="1705" href="Ledger.Ledger.html#1421" class="Datatype Operator">⇀⦇</a> <a id="1708" href="Ledger.Ledger.html#978" class="Generalizable">tx</a> <a id="1711" href="Agda.Builtin.List.html#182" class="InductiveConstructor Operator">∷</a> <a id="1713" href="Ledger.Ledger.html#1589" class="Bound">txs</a> <a id="1717" href="Ledger.Ledger.html#1421" class="Datatype Operator">,LEDGERS⦈</a> <a id="1727" href="Ledger.Ledger.html#917" class="Generalizable">s&#39;&#39;</a>
+<a id="1731" class="Markup">\end{code}</a><a id="1741" class="Background">
+\caption{LEDGERS transition system}
+\end{figure*}
+</a></pre></body></html>
